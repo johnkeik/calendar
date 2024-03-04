@@ -3,187 +3,74 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   TemplateRef,
+  ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
-import {
-  startOfDay,
-  endOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
-  isSameDay,
-  isSameMonth,
-  addHours,
-} from 'date-fns';
 import { Subject } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  CalendarEvent,
-  CalendarEventAction,
-  CalendarEventTimesChangedEvent,
-  CalendarView,
-} from 'angular-calendar';
-import { EventColor } from 'calendar-utils';
-
-const colors: Record<string, EventColor> = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3',
-  },
-  blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF',
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA',
-  },
-};
+import { CalendarEvent, CalendarView } from 'angular-calendar';
+import { ModalService } from '../components/modal/modal.service';
+import { endOfDay, startOfDay } from 'date-fns';
+import { ModalContentComponent } from '../components/modal-content/modal-content.component';
 
 @Component({
   selector: 'app-calendar',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [
-    `
-      h3 {
-        margin: 0 0 10px;
-      }
-
-      pre {
-        background-color: #f5f5f5;
-        padding: 15px;
-      }
-    `,
-  ],
   templateUrl: 'calendar.component.html',
+  styleUrls: ['./calendar.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CalendarComponent {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   view: CalendarView = CalendarView.Week;
-
   CalendarView = CalendarView;
-
   viewDate: Date = new Date();
 
-  modalData: {
-    action: string;
-    event: CalendarEvent;
-  };
-
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
-      a11yLabel: 'Edit',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
-      },
-    },
-    {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
-      a11yLabel: 'Delete',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
-      },
-    },
-  ];
+  segment: Date;
+  @ViewChild('modalView', { static: true, read: ViewContainerRef })
+  vcr!: ViewContainerRef;
 
   refresh = new Subject<void>();
 
-  events: CalendarEvent[] = [
-    // {
-    //   start: subDays(startOfDay(new Date()), 1),
-    //   end: addDays(new Date(), 1),
-    //   title: 'A 3 day event',
-    //   color: { ...colors['red'] },
-    //   actions: this.actions,
-    //   allDay: true,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-    // {
-    //   start: startOfDay(new Date()),
-    //   title: 'An event with no end date',
-    //   color: { ...colors['yellow'] },
-    //   actions: this.actions,
-    // },
-    // {
-    //   start: subDays(endOfMonth(new Date()), 3),
-    //   end: addDays(endOfMonth(new Date()), 3),
-    //   title: 'A long event that spans 2 months',
-    //   color: { ...colors['blue'] },
-    //   allDay: true,
-    // },
-    // {
-    //   start: addHours(startOfDay(new Date()), 2),
-    //   end: addHours(new Date(), 2),
-    //   title: 'A draggable and resizable event',
-    //   color: { ...colors['yellow'] },
-    //   actions: this.actions,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-  ];
+  events: CalendarEvent[] = [];
 
-  activeDayIsOpen: boolean = true;
+  constructor(private modalService: ModalService) {}
 
-  constructor(private modal: NgbModal) {}
-
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
-    if (isSameMonth(date, this.viewDate)) {
-      if (
-        (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
-        events.length === 0
-      ) {
-        this.activeDayIsOpen = false;
-      } else {
-        this.activeDayIsOpen = true;
-      }
-      this.viewDate = date;
-    }
-  }
-
-  segmentClicked(event: any) {
-    console.log(event);
-  }
-
-  handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
-  }
-
-  addEvent(): void {
+  addEvent(timeStart: number): void {
     this.events = [
       ...this.events,
       {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors['red'],
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        },
+        title: 'Booked',
+        start: new Date(timeStart),
+        end: new Date(timeStart + 30 * 60 * 1000),
+        color: { primary: 'grey', secondary: 'lightgrey' },
       },
     ];
   }
 
-  deleteEvent(eventToDelete: CalendarEvent) {
-    this.events = this.events.filter((event) => event !== eventToDelete);
+  segmentClicked(event: any, view: TemplateRef<Element>) {
+    this.segment = event.date;
+    if (
+      new Date(event.date).getTime() >=
+      new Date().getTime() + 60 * 60 * 1000
+    ) {
+      this.addEvent(new Date(event.date).getTime());
+      this.modalService.open(this.vcr, view, {
+        animations: {
+          modal: {},
+          overlay: {
+            enter: 'fade-in 0.8s',
+            leave: 'fade-out 0.3s forwards',
+          },
+        },
+        size: {
+          width: '40rem',
+        },
+      });
+    }
   }
 
-  setView(view: CalendarView) {
-    this.view = view;
-  }
-
-  closeOpenMonthViewDay() {
-    this.activeDayIsOpen = false;
+  close() {
+    this.modalService.close();
   }
 }

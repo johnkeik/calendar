@@ -7,3 +7,9 @@
 @import "bootstrap/scss/bootstrap";
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 @import "./app/components/modal/modal-animations.scss";
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

@@ -1,0 +1,28 @@
+mwl-calendar-event-title span {
+  font-size: 8px !important;
+  line-height: normal !important;
+  color: black;
+}
+
+mwl-calendar-event-title {
+  line-height: normal !important;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+mwl-calendar-week-view-event div.cal-event {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:host {
+  display: flex;
+  justify-content: center;
+}
+
+.title-container {
+  display: flex;
+  gap: 15px;
+}

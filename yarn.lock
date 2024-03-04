@@ -122,7 +122,7 @@
 
 "@angular/animations@^17.2.0":
   version "17.2.3"
-  resolved "https://registry.npmjs.org/@angular/animations/-/animations-17.2.3.tgz"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-17.2.3.tgz#1caa126e73b9469008affa017ecd50a3df0741f1"
   integrity sha512-eQcN6hC/dXISEYC/TjRuQJgfdZieBROBlXrS+BxRbsy9T4/QeKxChC3yiNxTmdxl5mvjLKvQTXHR8X0AWc07/Q==
   dependencies:
     tslib "^2.3.0"

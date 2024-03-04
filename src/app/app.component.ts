@@ -27,9 +27,7 @@ export class AppComponent {
   openModalTemplate(view: TemplateRef<Element>) {
     this.modalService.open(this.vcr, view, {
       animations: {
-        modal: {
-          enter: 'enter-slide-down 0.8s',
-        },
+        modal: {},
         overlay: {
           enter: 'fade-in 0.8s',
           leave: 'fade-out 0.3s forwards',

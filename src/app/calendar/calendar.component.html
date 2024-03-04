@@ -1,5 +1,4 @@
-<button (click)="addEvent()">add</button>
-<div class="row text-center">
+<div class="title-container">
   <div class="col-md-4">
     <div class="btn-group">
       <div
@@ -7,7 +6,6 @@
         mwlCalendarPreviousView
         [view]="view"
         [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()"
       >
         Previous
       </div>
@@ -23,13 +21,12 @@
         mwlCalendarNextView
         [view]="view"
         [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()"
       >
         Next
       </div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="">
     <h3>{{ viewDate | calendarDate : view + "ViewTitle" : "en" }}</h3>
   </div>
 </div>
@@ -39,34 +36,16 @@
     [viewDate]="viewDate"
     [events]="events"
     [refresh]="refresh"
+    [minimumEventHeight]="20"
     [hourSegmentHeight]="20"
     [hourSegments]="2"
-    (hourSegmentClicked)="segmentClicked($event)"
+    (hourSegmentClicked)="segmentClicked($event, modalView)"
     [dayStartHour]="8"
     [dayEndHour]="17"
   >
   </mwl-calendar-week-view>
 </div>
-<ng-template #modalContent let-close="close">
-  <div class="modal-header">
-    <h5 class="modal-title">Event action occurred</h5>
-    <button type="button" class="close" (click)="close()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div>
-      Action:
-      <pre>{{ modalData.action }}</pre>
-    </div>
-    <div>
-      Event:
-      <pre>{{ modalData.event | json }}</pre>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="close()">
-      OK
-    </button>
-  </div>
+
+<ng-template #modalView>
+  <app-modal-content [date]="segment" (close)="close()" />
 </ng-template>

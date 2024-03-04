@@ -5,6 +5,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarComponent } from './calendar.component';
+import { ModalContentComponent } from '../components/modal-content/modal-content.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { CalendarComponent } from './calendar.component';
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
+    ModalContentComponent,
   ],
   declarations: [CalendarComponent],
   exports: [CalendarComponent],

@@ -1,1 +1,17 @@
-<div style="height: 250px; width: 250px; background-color: white"></div>
+<div class="modal-container">
+  <div class="title">
+    <h2>Book your appointment</h2>
+  </div>
+  <div class="content">
+    <p class="current">Time: {{ date.toDateString() }}</p>
+    <input [placeholder]="'Name*'" class="input" [required]="true" />
+    <input [placeholder]="'Email*'" class="input" [required]="true" />
+    <input [placeholder]="'Phone*'" class="input" [required]="true" />
+  </div>
+  <div class="footer">
+    <button class="button" style="background-color: red" (click)="closeModal()">
+      Close
+    </button>
+    <button class="button" (click)="closeModal()">Send</button>
+  </div>
+</div>
