@@ -5,13 +5,13 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  OnInit,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { CalendarEvent, CalendarView } from 'angular-calendar';
 import { ModalService } from '../components/modal/modal.service';
-import { endOfDay, startOfDay } from 'date-fns';
-import { ModalContentComponent } from '../components/modal-content/modal-content.component';
-
+import { inject } from '@angular/core';
+import { Database, object, ref, set, list } from '@angular/fire/database';
 @Component({
   selector: 'app-calendar',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,8 +19,9 @@ import { ModalContentComponent } from '../components/modal-content/modal-content
   styleUrls: ['./calendar.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+  private database: Database = inject(Database);
 
   view: CalendarView = CalendarView.Week;
   CalendarView = CalendarView;
@@ -34,7 +35,12 @@ export class CalendarComponent {
 
   events: CalendarEvent[] = [];
 
-  constructor(private modalService: ModalService) {}
+  constructor(private modalService: ModalService) {
+    console.log(this.database);
+  }
+  ngOnInit(): void {}
+
+  test() {}
 
   addEvent(timeStart: number): void {
     this.events = [

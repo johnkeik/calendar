@@ -1,63 +1,40 @@
-import {
-  Component,
-  TemplateRef,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CalendarComponentModule } from './calendar/calendar.module';
-import { ModalService } from './components/modal/modal.service';
-import { ModalContentComponent } from './components/modal-content/modal-content.component';
 
+import { SharedModule } from './shared/shared.module';
+import { Observable, Subject, Subscription } from 'rxjs';
+
+import { list, ref, Database, set, onValue } from '@angular/fire/database';
+import { ReservationService } from './services/reservation.service';
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, CalendarComponentModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'calendar';
+  reservationData: any[] = [];
+  private subscription: Subscription;
 
-  @ViewChild('view', { static: true, read: ViewContainerRef })
-  vcr!: ViewContainerRef;
+  constructor(private reservationService: ReservationService) {}
 
-  constructor(private modalService: ModalService) {}
-
-  openModalTemplate(view: TemplateRef<Element>) {
-    this.modalService.open(this.vcr, view, {
-      animations: {
-        modal: {},
-        overlay: {
-          enter: 'fade-in 0.8s',
-          leave: 'fade-out 0.3s forwards',
-        },
-      },
-      size: {
-        width: '40rem',
-      },
+  ngOnInit() {
+    this.subscription = this.reservationService.getData().subscribe((data) => {
+      console.log(data);
+      this.reservationData = Object.keys(data).map((date) => {
+        return { date, ...data[date] };
+      });
     });
   }
 
-  openModalComponent() {
-    this.modalService.open(ModalContentComponent, {
-      animations: {
-        modal: {
-          enter: 'enter-scaling 0.3s ease-out',
-          leave: 'fade-out 0.3s forwards',
-        },
-        overlay: {
-          enter: 'fade-in 1s',
-          leave: 'fade-out 0.3s forwards',
-        },
-      },
-      size: {
-        width: '40rem',
-      },
-    });
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
-  close() {
-    this.modalService.close();
+  addData() {
+    this.reservationService.addData();
   }
 }
