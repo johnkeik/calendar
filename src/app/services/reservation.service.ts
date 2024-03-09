@@ -8,9 +8,9 @@ import { Observable } from 'rxjs';
 export class ReservationService {
   constructor(private database: Database) {}
 
-  addData() {
+  addData(timeStart: number) {
     const data = {
-      timeStamp: new Date().getTime(),
+      timeStamp: new Date(timeStart).getTime(),
       email: 'giannis.keik@gmail.com',
       name: 'John',
       phone: '78329418298',

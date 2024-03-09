@@ -1,11 +1,6 @@
-<h3 class="m-3">hello world</h3>
-<button (click)="addData()">Add data</button>
 
-<div *ngFor="let reservation of reservationData">
-    <div>Date: {{ reservation.date }}</div>
-    <div>Email: {{ reservation.email }}</div>
-    <div>Name: {{ reservation.name }}</div>
-    <div>Timestamp: {{ reservation.timeStamp }}</div>
-    <hr>
-  </div>
+<div class="app-container">
+<h3 class="m-3">hello world</h3>
   
+<app-calendar style="width: 100%; max-width: 800px;"></app-calendar>
+</div>
