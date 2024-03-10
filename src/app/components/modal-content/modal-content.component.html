@@ -4,9 +4,9 @@
   </div>
   <div class="content">
     <p class="current">Time: {{ date.toDateString() }}</p>
-    <input [placeholder]="'Name*'" class="input" [required]="true" />
-    <input [placeholder]="'Email*'" class="input" [required]="true" />
-    <input [placeholder]="'Phone*'" class="input" [required]="true" />
+    <input #nameField [placeholder]="'Name*'" class="input" [required]="true" [value]="name()" (input)="name.set(nameField.value)" />
+    <input #emailField [placeholder]="'Email*'" class="input" [required]="true"  [value]="email()" (input)="email.set(emailField.value)"/>
+    <input #phoneField [placeholder]="'Phone*'" class="input" [required]="true"  [value]="phone()" (input)="phone.set(phoneField.value)" />
   </div>
   <div class="footer">
     <button class="button" style="background-color: red" (click)="closeModal()">
@@ -14,4 +14,6 @@
     </button>
     <button class="button" (click)="closeModal()">Send</button>
   </div>
+
+  <h1>{{name()}} {{email()}} {{phone()}}</h1>
 </div>

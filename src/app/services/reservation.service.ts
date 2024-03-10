@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { list, ref, Database, set, onValue } from '@angular/fire/database';
 import { Observable } from 'rxjs';
+import { Reservation } from '../models/reservation.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,13 @@ export class ReservationService {
       name: data.name,
       phone: data.phone,
     });
+  }
+
+  addReservation(reservation: Reservation) {
+    set(
+      ref(this.database, `/tempReservations/${reservation.timeStart}/`),
+      reservation
+    );
   }
 
   getData(): Observable<any> {

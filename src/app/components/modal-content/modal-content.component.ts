@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { ModalService } from '../modal/modal.service';
 
 @Component({
@@ -12,6 +12,10 @@ export class ModalContentComponent {
   @Input() date: Date;
   @Output()
   close: EventEmitter<void> = new EventEmitter();
+
+  name = signal('');
+  email = signal('');
+  phone = signal('');
 
   constructor(private modalService: ModalService) {}
 
